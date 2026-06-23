@@ -16,6 +16,13 @@ public class FollowUp {
 
     public void followUp(){
         System.out.println("+++++followUp积分计算方法执行+++++");
+        //读取积分文件
+        String file = FileUtils.readFile("score");
+        PointObject pointObject = JsonUtils.jsonToPojo(file, PointObject.class);
+        //TODO 累加可兑换积分与总积分
+        //写回积分文件
+        String content = JsonUtils.objectToJson(pointObject);
+        FileUtils.writeFile("score", content);
     }
 
 }
