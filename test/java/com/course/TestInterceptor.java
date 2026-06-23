@@ -2,6 +2,7 @@ package com.course;
 
 import com.course.controller.TestDesign;
 import com.course.controller.FollowUp;
+import com.course.controller.ExtendedActivity;
 import com.course.pojo.PointObject;
 import com.course.utils.FileUtils;
 import com.course.utils.JsonUtils;
@@ -31,6 +32,9 @@ public class TestInterceptor {
 
 	@Autowired
 	FollowUp followUp;
+
+	@Autowired
+	ExtendedActivity extendedActivity;
 	
     //检验当前积分情况
     private int assertScore(){
@@ -89,6 +93,19 @@ public class TestInterceptor {
     		int score2=assertScore();
 
     		assertEquals(3, score2-score1);
+    	}catch (Exception e) {
+			// TODO: handle exception
+		}
+    }
+
+    @Test
+    public void extendedActivity() {
+    	try {
+    		int score1=assertScore();
+    		extendedActivity.extendedActivity();
+    		int score2=assertScore();
+
+    		assertEquals(5, score2-score1);
     	}catch (Exception e) {
 			// TODO: handle exception
 		}
