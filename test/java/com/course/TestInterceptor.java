@@ -1,6 +1,7 @@
 package com.course;
 
 import com.course.controller.TestDesign;
+import com.course.controller.FollowUp;
 import com.course.pojo.PointObject;
 import com.course.utils.FileUtils;
 import com.course.utils.JsonUtils;
@@ -27,6 +28,9 @@ public class TestInterceptor {
 	
 	@Autowired
 	TestDesign testDesign;
+
+	@Autowired
+	FollowUp followUp;
 	
     //检验当前积分情况
     private int assertScore(){
@@ -72,6 +76,19 @@ public class TestInterceptor {
     		int score2=assertScore();
     		
     		assertEquals(1, score2-score1);
+    	}catch (Exception e) {
+			// TODO: handle exception
+		}
+    }
+
+    @Test
+    public void followUp() {
+    	try {
+    		int score1=assertScore();
+    		followUp.followUp();
+    		int score2=assertScore();
+
+    		assertEquals(3, score2-score1);
     	}catch (Exception e) {
 			// TODO: handle exception
 		}
