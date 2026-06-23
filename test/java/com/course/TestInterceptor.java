@@ -35,6 +35,9 @@ public class TestInterceptor {
 
 	@Autowired
 	ExtendedActivity extendedActivity;
+
+	@Autowired
+	ResearchRecruitment researchRecruitment;
 	
     //检验当前积分情况
     private int assertScore(){
@@ -106,6 +109,19 @@ public class TestInterceptor {
     		int score2=assertScore();
 
     		assertEquals(5, score2-score1);
+    	}catch (Exception e) {
+			// TODO: handle exception
+		}
+    }
+
+    @Test
+    public void researchRecruitment() {
+    	try {
+    		int score1=assertScore();
+    		researchRecruitment.researchRecruitment();
+    		int score2=assertScore();
+
+    		assertEquals(8, score2-score1);
     	}catch (Exception e) {
 			// TODO: handle exception
 		}
