@@ -19,7 +19,9 @@ public class ExtendedActivity {
         //读取积分文件
         String file = FileUtils.readFile("score");
         PointObject pointObject = JsonUtils.jsonToPojo(file, PointObject.class);
-        //TODO 累加可兑换积分与总积分
+        //累加可兑换积分与总积分
+        pointObject.setExchangeScore(pointObject.getExchangeScore() + EXTENDED_ACTIVITY_SCORE);
+        pointObject.setScoreTotal(pointObject.getScoreTotal() + EXTENDED_ACTIVITY_SCORE);
         //写回积分文件
         String content = JsonUtils.objectToJson(pointObject);
         FileUtils.writeFile("score", content);
