@@ -16,6 +16,13 @@ public class FillInformation {
 
     public void fillInformation(){
         System.out.println("+++++fillInformation积分计算方法执行+++++");
+        //读取积分文件
+        String file = FileUtils.readFile("score");
+        PointObject pointObject = JsonUtils.jsonToPojo(file, PointObject.class);
+        //TODO 后续补充积分累加与首次填写限制逻辑
+        //写回积分文件
+        String content = JsonUtils.objectToJson(pointObject);
+        FileUtils.writeFile("score", content);
     }
 
 }
