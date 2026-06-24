@@ -11,7 +11,10 @@ import com.course.utils.JsonUtils;
 //类名与方法名须与controller层拦截的方法一致
 public class Login {
 
-    public void testDesign(){
+    //登陆平台获得的成长积分：每日首次登陆获得1分
+    private static final int LOGIN_SCORE = 1;
+
+    public void login(){
         System.out.println("+++++login积分计算方法执行+++++");
     }
 
