@@ -11,6 +11,9 @@ import com.course.utils.JsonUtils;
 //类名与方法名须与controller层拦截的方法一致
 public class FillInformation {
 
+    //填写个人资料获得的成长积分：首次填写获得2分
+    private static final int FILL_INFORMATION_SCORE = 2;
+
     public void fillInformation(){
         System.out.println("+++++fillInformation积分计算方法执行+++++");
     }
