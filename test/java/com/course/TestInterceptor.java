@@ -6,6 +6,7 @@ import com.course.controller.ExtendedActivity;
 import com.course.controller.ResearchRecruitment;
 import com.course.controller.Login;
 import com.course.controller.FillInformation;
+import com.course.controller.BloodSugar;
 import com.course.pojo.PointObject;
 import com.course.utils.FileUtils;
 import com.course.utils.JsonUtils;
@@ -47,6 +48,9 @@ public class TestInterceptor {
 
 	@Autowired
 	FillInformation fillInformation;
+
+	@Autowired
+	BloodSugar bloodSugar;
 
     //读取当前积分对象
     private PointObject readPoint(){
@@ -190,6 +194,32 @@ public class TestInterceptor {
     		fillInformation.fillInformation();
     		int score4=assertScore();
     		assertEquals(0, score4-score3);
+    	}catch (Exception e) {
+			// TODO: handle exception
+		}
+    }
+
+    @Test
+    public void bloodSugar() {
+    	try {
+    		//重置血糖记录数，保证测试可重复
+    		PointObject p = readPoint();
+    		p.setBloodSugarCount(0);
+    		savePoint(p);
+
+    		//前3次记录：记录数不超过3，不积分
+    		for (int i = 1; i <= 3; i++) {
+    			int s1 = assertScore();
+    			bloodSugar.bloodSugar();
+    			int s2 = assertScore();
+    			assertEquals(0, s2 - s1);
+    		}
+
+    		//第4次记录：记录数为4，超过3，积1分
+    		int s1 = assertScore();
+    		bloodSugar.bloodSugar();
+    		int s2 = assertScore();
+    		assertEquals(1, s2 - s1);
     	}catch (Exception e) {
 			// TODO: handle exception
 		}
