@@ -21,7 +21,15 @@ public class BloodSugar {
         //读取积分文件
         String file = FileUtils.readFile("score");
         PointObject pointObject = JsonUtils.jsonToPojo(file, PointObject.class);
-        //TODO 后续补充血糖记录计数与记录数大于3的积分逻辑
+
+        //血糖记录数加1（兼容历史数据为null的情况）
+        int count = pointObject.getBloodSugarCount() == null ? 0 : pointObject.getBloodSugarCount();
+        count = count + 1;
+        pointObject.setBloodSugarCount(count);
+
+        //累加成长积分与总积分
+        pointObject.setGrowScore(pointObject.getGrowScore() + BLOOD_SUGAR_SCORE);
+        pointObject.setScoreTotal(pointObject.getScoreTotal() + BLOOD_SUGAR_SCORE);
         //写回积分文件
         String content = JsonUtils.objectToJson(pointObject);
         FileUtils.writeFile("score", content);
