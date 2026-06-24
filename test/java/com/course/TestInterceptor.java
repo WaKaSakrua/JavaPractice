@@ -3,6 +3,8 @@ package com.course;
 import com.course.controller.TestDesign;
 import com.course.controller.FollowUp;
 import com.course.controller.ExtendedActivity;
+import com.course.controller.ResearchRecruitment;
+import com.course.controller.Login;
 import com.course.pojo.PointObject;
 import com.course.utils.FileUtils;
 import com.course.utils.JsonUtils;
@@ -38,7 +40,21 @@ public class TestInterceptor {
 
 	@Autowired
 	ResearchRecruitment researchRecruitment;
-	
+
+	@Autowired
+	Login login;
+
+    //读取当前积分对象
+    private PointObject readPoint(){
+        String file = FileUtils.readFile("score");
+        return JsonUtils.jsonToPojo(file, PointObject.class);
+    }
+
+    //写回积分对象
+    private void savePoint(PointObject pointObject){
+        FileUtils.writeFile("score", JsonUtils.objectToJson(pointObject));
+    }
+
     //检验当前积分情况
     private int assertScore(){
         try {
@@ -122,6 +138,30 @@ public class TestInterceptor {
     		int score2=assertScore();
 
     		assertEquals(8, score2-score1);
+    	}catch (Exception e) {
+			// TODO: handle exception
+		}
+    }
+
+    @Test
+    public void login() {
+    	try {
+    		//清空今日登陆记录，保证"每日首次登陆"可计分，使测试可重复
+    		PointObject p = readPoint();
+    		p.setLastLoginDate(null);
+    		savePoint(p);
+
+    		int score1=assertScore();
+    		login.login();
+    		int score2=assertScore();
+    		//每日首次登陆获得1分
+    		assertEquals(1, score2-score1);
+
+    		//同一天再次登陆不再计分
+    		int score3=assertScore();
+    		login.login();
+    		int score4=assertScore();
+    		assertEquals(0, score4-score3);
     	}catch (Exception e) {
 			// TODO: handle exception
 		}
