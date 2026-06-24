@@ -11,6 +11,11 @@ import com.course.utils.JsonUtils;
 //类名与方法名须与controller层拦截的方法一致
 public class BloodSugar {
 
+    //记录血糖获得的成长积分：当血糖记录数大于3时，每次记录积1分
+    private static final int BLOOD_SUGAR_SCORE = 1;
+    //开始计分的记录数阈值：记录数大于3才积分
+    private static final int BLOOD_SUGAR_THRESHOLD = 3;
+
     public void bloodSugar(){
         System.out.println("+++++bloodSugar积分计算方法执行+++++");
     }
