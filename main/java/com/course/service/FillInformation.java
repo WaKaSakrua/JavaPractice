@@ -19,9 +19,17 @@ public class FillInformation {
         //读取积分文件
         String file = FileUtils.readFile("score");
         PointObject pointObject = JsonUtils.jsonToPojo(file, PointObject.class);
-        //累加成长积分与总积分
+
+        //限制：仅首次填写个人资料才计分
+        if (Boolean.TRUE.equals(pointObject.getInfoFilled())) {
+            System.out.println("个人资料已填写过，本次不再积分");
+            return;
+        }
+
+        //累加成长积分与总积分，并标记已填写
         pointObject.setGrowScore(pointObject.getGrowScore() + FILL_INFORMATION_SCORE);
         pointObject.setScoreTotal(pointObject.getScoreTotal() + FILL_INFORMATION_SCORE);
+        pointObject.setInfoFilled(true);
         //写回积分文件
         String content = JsonUtils.objectToJson(pointObject);
         FileUtils.writeFile("score", content);
