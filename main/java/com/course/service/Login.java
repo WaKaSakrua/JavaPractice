@@ -19,7 +19,9 @@ public class Login {
         //读取积分文件
         String file = FileUtils.readFile("score");
         PointObject pointObject = JsonUtils.jsonToPojo(file, PointObject.class);
-        //TODO 此处后续补充登陆积分的累加与每日首次限制逻辑
+        //累加成长积分与总积分
+        pointObject.setGrowScore(pointObject.getGrowScore() + LOGIN_SCORE);
+        pointObject.setScoreTotal(pointObject.getScoreTotal() + LOGIN_SCORE);
         //写回积分文件
         String content = JsonUtils.objectToJson(pointObject);
         FileUtils.writeFile("score", content);
