@@ -5,6 +5,7 @@ import com.course.controller.FollowUp;
 import com.course.controller.ExtendedActivity;
 import com.course.controller.ResearchRecruitment;
 import com.course.controller.Login;
+import com.course.controller.FillInformation;
 import com.course.pojo.PointObject;
 import com.course.utils.FileUtils;
 import com.course.utils.JsonUtils;
@@ -43,6 +44,9 @@ public class TestInterceptor {
 
 	@Autowired
 	Login login;
+
+	@Autowired
+	FillInformation fillInformation;
 
     //读取当前积分对象
     private PointObject readPoint(){
@@ -160,6 +164,30 @@ public class TestInterceptor {
     		//同一天再次登陆不再计分
     		int score3=assertScore();
     		login.login();
+    		int score4=assertScore();
+    		assertEquals(0, score4-score3);
+    	}catch (Exception e) {
+			// TODO: handle exception
+		}
+    }
+
+    @Test
+    public void fillInformation() {
+    	try {
+    		//清空已填写标记，保证"首次填写"可计分，使测试可重复
+    		PointObject p = readPoint();
+    		p.setInfoFilled(false);
+    		savePoint(p);
+
+    		int score1=assertScore();
+    		fillInformation.fillInformation();
+    		int score2=assertScore();
+    		//首次填写个人资料获得2分
+    		assertEquals(2, score2-score1);
+
+    		//再次填写不再计分
+    		int score3=assertScore();
+    		fillInformation.fillInformation();
     		int score4=assertScore();
     		assertEquals(0, score4-score3);
     	}catch (Exception e) {
