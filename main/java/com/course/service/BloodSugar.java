@@ -18,6 +18,13 @@ public class BloodSugar {
 
     public void bloodSugar(){
         System.out.println("+++++bloodSugar积分计算方法执行+++++");
+        //读取积分文件
+        String file = FileUtils.readFile("score");
+        PointObject pointObject = JsonUtils.jsonToPojo(file, PointObject.class);
+        //TODO 后续补充血糖记录计数与记录数大于3的积分逻辑
+        //写回积分文件
+        String content = JsonUtils.objectToJson(pointObject);
+        FileUtils.writeFile("score", content);
     }
 
 }
