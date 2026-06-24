@@ -27,9 +27,14 @@ public class BloodSugar {
         count = count + 1;
         pointObject.setBloodSugarCount(count);
 
-        //累加成长积分与总积分
-        pointObject.setGrowScore(pointObject.getGrowScore() + BLOOD_SUGAR_SCORE);
-        pointObject.setScoreTotal(pointObject.getScoreTotal() + BLOOD_SUGAR_SCORE);
+        //限制：血糖记录数大于3才积分
+        if (count > BLOOD_SUGAR_THRESHOLD) {
+            //累加成长积分与总积分
+            pointObject.setGrowScore(pointObject.getGrowScore() + BLOOD_SUGAR_SCORE);
+            pointObject.setScoreTotal(pointObject.getScoreTotal() + BLOOD_SUGAR_SCORE);
+        } else {
+            System.out.println("血糖记录数未超过3次，本次记录不积分，当前记录数：" + count);
+        }
         //写回积分文件
         String content = JsonUtils.objectToJson(pointObject);
         FileUtils.writeFile("score", content);
