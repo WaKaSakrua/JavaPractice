@@ -16,6 +16,13 @@ public class Login {
 
     public void login(){
         System.out.println("+++++login积分计算方法执行+++++");
+        //读取积分文件
+        String file = FileUtils.readFile("score");
+        PointObject pointObject = JsonUtils.jsonToPojo(file, PointObject.class);
+        //TODO 此处后续补充登陆积分的累加与每日首次限制逻辑
+        //写回积分文件
+        String content = JsonUtils.objectToJson(pointObject);
+        FileUtils.writeFile("score", content);
     }
 
 }
