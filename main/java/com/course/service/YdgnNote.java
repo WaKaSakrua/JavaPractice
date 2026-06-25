@@ -11,6 +11,11 @@ import com.course.utils.JsonUtils;
 //类名与方法名须与controller层拦截的方法一致
 public class YdgnNote {
 
+    //监测胰岛功能获得的成长积分：2分
+    private static final int YDGN_NOTE_SCORE = 2;
+    //计分间隔限制：胰岛功能3个月只积分1次
+    private static final int YDGN_INTERVAL_MONTHS = 3;
+
     public void ydgnNote(){
         System.out.println("+++++ydgnNote积分计算方法执行+++++");
     }
