@@ -4,6 +4,8 @@ import com.course.pojo.PointObject;
 import com.course.utils.FileUtils;
 import com.course.utils.JsonUtils;
 
+import java.time.LocalDate;
+
 /**
  * @author lixuy
  * Created on 2019-04-11
@@ -19,9 +21,18 @@ public class BfzNote {
         //读取积分文件
         String file = FileUtils.readFile("score");
         PointObject pointObject = JsonUtils.jsonToPojo(file, PointObject.class);
-        //累加成长积分与总积分
+
+        //限制：并发症记录每年只计分1次
+        int currentYear = LocalDate.now().getYear();
+        if (pointObject.getBfzLastYear() != null && pointObject.getBfzLastYear() == currentYear) {
+            System.out.println("本年度已填写并发症记录并计分，本次不再积分");
+            return;
+        }
+
+        //累加成长积分与总积分，并记录本次计分年份
         pointObject.setGrowScore(pointObject.getGrowScore() + BFZ_NOTE_SCORE);
         pointObject.setScoreTotal(pointObject.getScoreTotal() + BFZ_NOTE_SCORE);
+        pointObject.setBfzLastYear(currentYear);
         //写回积分文件
         String content = JsonUtils.objectToJson(pointObject);
         FileUtils.writeFile("score", content);
