@@ -7,6 +7,7 @@ import com.course.controller.ResearchRecruitment;
 import com.course.controller.Login;
 import com.course.controller.FillInformation;
 import com.course.controller.BloodSugar;
+import com.course.controller.BfzNote;
 import com.course.pojo.PointObject;
 import com.course.utils.FileUtils;
 import com.course.utils.JsonUtils;
@@ -51,6 +52,9 @@ public class TestInterceptor {
 
 	@Autowired
 	BloodSugar bloodSugar;
+
+	@Autowired
+	BfzNote bfzNote;
 
     //读取当前积分对象
     private PointObject readPoint(){
@@ -220,6 +224,30 @@ public class TestInterceptor {
     		bloodSugar.bloodSugar();
     		int s2 = assertScore();
     		assertEquals(1, s2 - s1);
+    	}catch (Exception e) {
+			// TODO: handle exception
+		}
+    }
+
+    @Test
+    public void bfzNote() {
+    	try {
+    		//清空本年度计分记录，保证测试可重复
+    		PointObject p = readPoint();
+    		p.setBfzLastYear(null);
+    		savePoint(p);
+
+    		int score1=assertScore();
+    		bfzNote.bfzNote();
+    		int score2=assertScore();
+    		//本年度首次填写并发症记录获得3分
+    		assertEquals(3, score2-score1);
+
+    		//同一年再次填写不再计分
+    		int score3=assertScore();
+    		bfzNote.bfzNote();
+    		int score4=assertScore();
+    		assertEquals(0, score4-score3);
     	}catch (Exception e) {
 			// TODO: handle exception
 		}
