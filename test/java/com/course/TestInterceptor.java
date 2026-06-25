@@ -9,7 +9,10 @@ import com.course.controller.FillInformation;
 import com.course.controller.BloodSugar;
 import com.course.controller.BfzNote;
 import com.course.controller.EvaluateReport;
+import com.course.controller.YdgnNote;
 import com.course.pojo.PointObject;
+
+import java.time.LocalDate;
 import com.course.utils.FileUtils;
 import com.course.utils.JsonUtils;
 
@@ -59,6 +62,9 @@ public class TestInterceptor {
 
 	@Autowired
 	EvaluateReport evaluateReport;
+
+	@Autowired
+	YdgnNote ydgnNote;
 
     //读取当前积分对象
     private PointObject readPoint(){
@@ -287,6 +293,39 @@ public class TestInterceptor {
     		evaluateReport.evaluateReport();
     		int s6 = assertScore();
     		assertEquals(0, s6 - s5);
+    	}catch (Exception e) {
+			// TODO: handle exception
+		}
+    }
+
+    @Test
+    public void ydgnNote() {
+    	try {
+    		//清空上次计分日期，保证首次可计分
+    		PointObject p = readPoint();
+    		p.setYdgnLastDate(null);
+    		savePoint(p);
+
+    		//首次监测胰岛功能获得2分
+    		int s1 = assertScore();
+    		ydgnNote.ydgnNote();
+    		int s2 = assertScore();
+    		assertEquals(2, s2 - s1);
+
+    		//距上次不足3个月，再次监测不计分
+    		int s3 = assertScore();
+    		ydgnNote.ydgnNote();
+    		int s4 = assertScore();
+    		assertEquals(0, s4 - s3);
+
+    		//将上次计分日期改为4个月前，超过3个月间隔，可再次计分
+    		p = readPoint();
+    		p.setYdgnLastDate(LocalDate.now().minusMonths(4).toString());
+    		savePoint(p);
+    		int s5 = assertScore();
+    		ydgnNote.ydgnNote();
+    		int s6 = assertScore();
+    		assertEquals(2, s6 - s5);
     	}catch (Exception e) {
 			// TODO: handle exception
 		}
