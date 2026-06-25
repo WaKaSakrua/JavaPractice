@@ -8,6 +8,7 @@ import com.course.controller.Login;
 import com.course.controller.FillInformation;
 import com.course.controller.BloodSugar;
 import com.course.controller.BfzNote;
+import com.course.controller.EvaluateReport;
 import com.course.pojo.PointObject;
 import com.course.utils.FileUtils;
 import com.course.utils.JsonUtils;
@@ -55,6 +56,9 @@ public class TestInterceptor {
 
 	@Autowired
 	BfzNote bfzNote;
+
+	@Autowired
+	EvaluateReport evaluateReport;
 
     //读取当前积分对象
     private PointObject readPoint(){
@@ -248,6 +252,41 @@ public class TestInterceptor {
     		bfzNote.bfzNote();
     		int score4=assertScore();
     		assertEquals(0, score4-score3);
+    	}catch (Exception e) {
+			// TODO: handle exception
+		}
+    }
+
+    @Test
+    public void evaluateReport() {
+    	try {
+    		//场景1：未满足前置条件(未填资料、血糖记录不足)，不计分
+    		PointObject p = readPoint();
+    		p.setEvaluateReported(false);
+    		p.setInfoFilled(false);
+    		p.setBloodSugarCount(0);
+    		savePoint(p);
+    		int s1 = assertScore();
+    		evaluateReport.evaluateReport();
+    		int s2 = assertScore();
+    		assertEquals(0, s2 - s1);
+
+    		//场景2：满足前置条件(已填资料、血糖记录>=10)，首次生成获得2分
+    		p = readPoint();
+    		p.setEvaluateReported(false);
+    		p.setInfoFilled(true);
+    		p.setBloodSugarCount(10);
+    		savePoint(p);
+    		int s3 = assertScore();
+    		evaluateReport.evaluateReport();
+    		int s4 = assertScore();
+    		assertEquals(2, s4 - s3);
+
+    		//场景3：已生成过，不再计分
+    		int s5 = assertScore();
+    		evaluateReport.evaluateReport();
+    		int s6 = assertScore();
+    		assertEquals(0, s6 - s5);
     	}catch (Exception e) {
 			// TODO: handle exception
 		}
