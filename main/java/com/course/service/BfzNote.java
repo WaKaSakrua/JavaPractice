@@ -19,7 +19,9 @@ public class BfzNote {
         //读取积分文件
         String file = FileUtils.readFile("score");
         PointObject pointObject = JsonUtils.jsonToPojo(file, PointObject.class);
-        //TODO 后续补充积分累加与每年只计分1次的限制逻辑
+        //累加成长积分与总积分
+        pointObject.setGrowScore(pointObject.getGrowScore() + BFZ_NOTE_SCORE);
+        pointObject.setScoreTotal(pointObject.getScoreTotal() + BFZ_NOTE_SCORE);
         //写回积分文件
         String content = JsonUtils.objectToJson(pointObject);
         FileUtils.writeFile("score", content);
