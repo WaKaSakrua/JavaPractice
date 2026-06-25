@@ -11,6 +11,9 @@ import com.course.utils.JsonUtils;
 //类名与方法名须与controller层拦截的方法一致
 public class BfzNote {
 
+    //填写并发症记录获得的成长积分：每年只计分1次，每次3分
+    private static final int BFZ_NOTE_SCORE = 3;
+
     public void bfzNote(){
         System.out.println("+++++bfzNote积分计算方法执行+++++");
     }
