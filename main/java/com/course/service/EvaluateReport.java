@@ -21,9 +21,28 @@ public class EvaluateReport {
         //读取积分文件
         String file = FileUtils.readFile("score");
         PointObject pointObject = JsonUtils.jsonToPojo(file, PointObject.class);
-        //累加成长积分与总积分
+
+        //限制1：评估报告只计分1次
+        if (Boolean.TRUE.equals(pointObject.getEvaluateReported())) {
+            System.out.println("评估报告已生成并计分过，本次不再积分");
+            return;
+        }
+        //限制2：需要先填写好个人资料
+        if (!Boolean.TRUE.equals(pointObject.getInfoFilled())) {
+            System.out.println("尚未填写个人资料，无法生成评估报告积分");
+            return;
+        }
+        //限制3：血糖记录数需大于等于10
+        int bsCount = pointObject.getBloodSugarCount() == null ? 0 : pointObject.getBloodSugarCount();
+        if (bsCount < REQUIRED_BLOOD_SUGAR_COUNT) {
+            System.out.println("血糖记录数不足" + REQUIRED_BLOOD_SUGAR_COUNT + "条，无法生成评估报告积分，当前：" + bsCount);
+            return;
+        }
+
+        //累加成长积分与总积分，并标记已生成评估报告
         pointObject.setGrowScore(pointObject.getGrowScore() + EVALUATE_REPORT_SCORE);
         pointObject.setScoreTotal(pointObject.getScoreTotal() + EVALUATE_REPORT_SCORE);
+        pointObject.setEvaluateReported(true);
         //写回积分文件
         String content = JsonUtils.objectToJson(pointObject);
         FileUtils.writeFile("score", content);
