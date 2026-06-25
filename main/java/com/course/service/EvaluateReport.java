@@ -21,7 +21,9 @@ public class EvaluateReport {
         //读取积分文件
         String file = FileUtils.readFile("score");
         PointObject pointObject = JsonUtils.jsonToPojo(file, PointObject.class);
-        //TODO 后续补充积分累加与前置条件(已填资料、血糖记录数>=10)限制逻辑
+        //累加成长积分与总积分
+        pointObject.setGrowScore(pointObject.getGrowScore() + EVALUATE_REPORT_SCORE);
+        pointObject.setScoreTotal(pointObject.getScoreTotal() + EVALUATE_REPORT_SCORE);
         //写回积分文件
         String content = JsonUtils.objectToJson(pointObject);
         FileUtils.writeFile("score", content);
