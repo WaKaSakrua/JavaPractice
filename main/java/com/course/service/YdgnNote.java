@@ -18,6 +18,13 @@ public class YdgnNote {
 
     public void ydgnNote(){
         System.out.println("+++++ydgnNote积分计算方法执行+++++");
+        //读取积分文件
+        String file = FileUtils.readFile("score");
+        PointObject pointObject = JsonUtils.jsonToPojo(file, PointObject.class);
+        //TODO 后续补充积分累加与3个月只积分1次的限制逻辑
+        //写回积分文件
+        String content = JsonUtils.objectToJson(pointObject);
+        FileUtils.writeFile("score", content);
     }
 
 }
